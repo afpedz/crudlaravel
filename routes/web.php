@@ -1,19 +1,17 @@
 <?php
 
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\LoginController;
+use App\Http\Controllers\RegisterController;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () {
-    return view('login', ['title' => 'Login']);
-});
+Route::get('/',  [LoginController::class,'index']);
 
 
 
-Route::get('/register', function () {
-    return view('register', ['title' => 'Sign Up']);
-});
+Route::get('/login', [LoginController::class,'index']);
 
 
+Route::get('/dashboard', [DashboardController::class,'index']);
 
-Route::get('/dashboard', function () {
-    return view('dashboard', ['title' => 'Dashboard']);
-});
+Route::get('/register', [RegisterController::class,'index']);
