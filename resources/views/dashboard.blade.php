@@ -6,7 +6,7 @@
             <button type="submit" class="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600">Logout</button>
         </form>
     </div>
-    
+
     <div class="max-w-7xl mx-auto mt-6">
         <table class="w-full border-collapse border border-gray-300 shadow-lg rounded-lg overflow-hidden">
             <thead>
@@ -54,9 +54,9 @@
                     <input type="email" name="email" id="userEmail" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md" required />
                 </div>
 
-                <div class="flex justify-between">
-                    <button type="button" onclick="closeModal()" class="px-4 py-2 bg-gray-300 text-white rounded-md hover:bg-gray-400">Cancel</button>
-                    <button type="submit" class="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600">Save Changes</button>
+                <div class="flex justify-between gap-4">
+                    <button type="button" onclick="closeModal()" class="px-4 py-2 bg-gray-300 text-white rounded-md hover:bg-gray-400 w-full">Cancel</button>
+                    <button type="submit" class="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 w-full">Save Changes</button>
                 </div>
             </form>
         </div>
