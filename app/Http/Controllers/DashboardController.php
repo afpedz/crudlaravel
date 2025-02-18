@@ -9,4 +9,9 @@ class DashboardController extends Controller
     public function index(){
         return view('dashboard',['title' => 'Dashboard']);
     }
+    //uncomment when going to use this controller for data handling
+    /*
+    public function store(Request $request){
+    }
+    */
 }
