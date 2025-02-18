@@ -44,7 +44,7 @@
             
             <button type="submit" class="w-full px-4 py-2 text-white bg-blue-500 rounded-lg hover:bg-blue-600">{{ $title }}</button>
         </form>
-        <p class="text-sm text-center text-gray-600">Already have an account? <a href="/" class="text-blue-500 hover:underline">Login</a></p>
+        <p class="text-sm text-center text-gray-600">Already have an account? <a href="{{ route('login') }}" class="text-blue-500 hover:underline">Login</a></p>
     </div>
 </body>
 
