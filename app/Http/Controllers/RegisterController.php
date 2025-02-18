@@ -22,13 +22,13 @@ class RegisterController extends Controller
             'password_confirmation' =>['required']
         ]);
         //store
-        user::create([
+        User::create([
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password)
         ]);
         //sign in user
-        Auth::attempt($request->only('email', 'password'));;
+        Auth::attempt($request->only('email', 'password'));
         //redirect
         return redirect()->route('dashboard');
     }

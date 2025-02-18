@@ -5,6 +5,11 @@
         <h2 class="text-2xl font-bold text-center text-gray-700">{{ $title }}</h2>
         <form class="space-y-3" action="{{ route('login') }}" method="post">
             @csrf
+            @if (session('status'))
+                    <div class="bg-red-500 px-4 py-2 rounded-lg mb-6 text-white text-center mt-2">
+                        {{ session('status') }}
+                    </div>
+            @endif
             <div>
                 <label class="block text-gray-600">Email</label>
                 <input type="email" name="email" id="email" class="w-full px-4 py-2 mt-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 @error('email') border-red-500 @enderror" placeholder="Enter your email">
@@ -22,11 +27,7 @@
                         {{ $message }}
                     </div>
                 @enderror
-                @if (session('status'))
-                    <div class="bg-red-500 p-4 rounded-lg mb-6 text-white text-center mt-2">
-                        {{ session('status') }}
-                    </div>
-                @endif
+                
             </div>
             <button type="submit" class="w-full px-4 py-2 text-white bg-blue-500 rounded-lg hover:bg-blue-600">{{ $title }}</button>
         </form>

@@ -5,6 +5,7 @@
         <h2 class="text-2xl font-bold text-center text-gray-700">{{ $title }}</h2>
         <form class="space-y-4" action="{{ route('register') }}" method="post">
             @csrf
+
             <div>
                 <label class="block text-gray-600">Full Name</label>
                 <input type="text" name="name" id="name" class="w-full px-4 py-2 mt-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 @error('name') border-red-500 @enderror" placeholder="Enter your full name" value="{{ old('name') }}">
