@@ -86,9 +86,6 @@
         function closeModal() {
             document.getElementById('modal').classList.add('hidden');
         }
-        function confirmDelete() {
-            return confirm("Are you sure you want to delete this user?");
-        }
 
         function openConfirmDelete(userId) {
             const currentUserId = '{{ Auth::id() }}'; // Get the currently authenticated user's ID
@@ -139,7 +136,7 @@
             });
         });
     });
-
+    //for deletion ajax
     document.addEventListener('DOMContentLoaded', function() {
         document.getElementById('deleteForm').addEventListener('submit', function(e) {
             e.preventDefault();
