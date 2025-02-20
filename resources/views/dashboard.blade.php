@@ -71,14 +71,29 @@
             </div>
         </div>
     </div>
-    
+
     <script>
         function openModal(id, name, email) {
             document.getElementById('modal').classList.remove('hidden');
-            document.getElementById('userId').value = id;
-            document.getElementById('userName').value = name;
-            document.getElementById('userEmail').value = email;
-            document.getElementById('editForm').action = '/dashboard/' + id;
+            document.getElementById('userId').value = id; // Set the hidden user ID
+            document.getElementById('editForm').action = '/dashboard/' + id; // Set the form action
+
+            // Fetch the user data from the server
+            fetch(`/dashboard/${id}`)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    // Set the name and email inputs with the fetched data
+                    document.getElementById('userName').value = data.name; // Set the name input
+                    document.getElementById('userEmail').value = data.email; // Set the email input
+                })
+                .catch(error => {
+                    console.error('There was a problem with the fetch operation:', error);
+                });
         }
 
         function closeModal() {
@@ -124,8 +139,12 @@
                     .then(data => {
                         // Update the table row with the new data
                         const row = document.querySelector(`tr[data-id="${data.id}"]`);
-                        row.querySelector('td:nth-child(2)').textContent = data.name;
-                        row.querySelector('td:nth-child(3)').textContent = data.email;
+                        if (row) {
+                            row.querySelector('td:nth-child(2)').textContent = data.name; // Update name
+                            row.querySelector('td:nth-child(3)').textContent = data.email; // Update email
+                        }
+                        // Optionally, you can call openModal here to show the updated data
+                        // openModal(data.id, data.name, data.email);
                         closeModal();
                     })
                     .catch(error => {

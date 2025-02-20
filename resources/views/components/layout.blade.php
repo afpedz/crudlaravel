@@ -6,7 +6,6 @@
     <title> {{ $title ? $title : 'CRUD Laravel' }} </title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="jquery-3.7.1.min.js"></script>
 </head>
 
 <header>
