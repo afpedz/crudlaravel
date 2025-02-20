@@ -4,12 +4,11 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
- 
-
-    public function edit($id)
+    public function index($id)
     {
         $user = User::findOrFail($id);
         return view('dashboard', ['user' => $user]);
@@ -53,5 +52,28 @@ class UserController extends Controller
     
         // Return the deleted user ID as JSON
         return response()->json(['id' => $id, 'loggedOut' => false]);
+    }
+
+    public function store(Request $request){
+        // Validate
+        $this->validate($request, [
+            'name' => ['required', 'max:255'],
+            'email' => ['required', 'max:255', 'email', 'unique:users,email'],
+            'password' => ['required', 'confirmed'],
+            'password_confirmation' => ['required']
+        ]);
+
+        // Store
+        User::create([
+            'name' => $request->name,
+            'email' => $request->email,
+            'password' => Hash::make($request->password)
+        ]);
+
+        // Sign in user
+        Auth::attempt($request->only('email', 'password'));
+
+        // Return a JSON response
+        return response()->json(['redirect' => route('dashboard')]);
     }
 }
