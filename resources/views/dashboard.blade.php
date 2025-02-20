@@ -21,15 +21,15 @@
                 @if ($users->count() > 0)
                     @foreach ($users as $user)
                         <tr class="border border-gray-300 text-gray-700 hover:bg-gray-50">
-                            <td class="border border-gray-300 px-5 py-2 text-center">{{ $user->id }}</td>
-                            <td class="border border-gray-300 px-5 py-2">{{ $user->name }}</td>
-                            <td class="border border-gray-300 px-5 py-2">{{ $user->email }}</td>
-                            <td class="border border-gray-300 px-5 py-2 text-center">
-                                <button onclick="openModal('{{ $user->id }}', '{{ $user->name }}', '{{ $user->email }}')" class="text-blue-500 hover:underline">Edit</button>
-                                |
-                                <button onclick="openConfirmDelete('{{ $user->id }}')" class="text-red-500 hover:underline">Delete</button>
-                            </td>
-                        </tr>
+                        <td class="border border-gray-300 px-5 py-2 text-center">{{ $user->id }}</td>
+                        <td class="border border-gray-300 px-5 py-2">{{ $user->name }}</td>
+                        <td class="border border-gray-300 px-5 py-2">{{ $user->email }}</td>
+                        <td class="border border-gray-300 px-5 py-2 text-center">
+                        <button onclick="openModal('{{ $user->id }}', '{{ $user->name }}', '{{ $user->email }}')" class="text-blue-500 hover:underline">Edit</button>
+                        |
+                        <button onclick="openConfirmDelete('{{ $user->id }}')" class="text-red-500 hover:underline">Delete</button>
+                        </td>
+                </tr>
                     @endforeach
                 @endif
             </tbody>
@@ -39,11 +39,10 @@
     <div id="modal" class="fixed inset-0 bg-gray-500 bg-opacity-75 flex justify-center items-center z-50 hidden ">
         <div class="bg-white p-8 rounded-lg w-1/4">
             <h2 class="text-2xl font-bold text-center mb-4">Edit User</h2>
-            <form action="{{ route('users.update', ['id' => $user->id]) }}" method="POST">
+            <form id="editForm" action="" method="POST">
                 @csrf
                 @method('PUT')
-                <input type="hidden" name="user_id" id="userId" value="{{ $user->id }}" />
-
+                <input type="hidden" name="user_id" id="userId" />
                 <div class="mb-4">
                     <label for="name" class="block text-sm font-medium text-gray-700">Full Name</label>
                     <input type="text" name="name" id="userName" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md" required />
@@ -79,9 +78,10 @@
     <script>
         function openModal(id, name, email) {
             document.getElementById('modal').classList.remove('hidden');
-            document.getElementById('userId').value = {{ $user->id }};
+            document.getElementById('userId').value = id;
             document.getElementById('userName').value = name;
             document.getElementById('userEmail').value = email;
+            document.getElementById('editForm').action = '/dashboard/' + id; // Set the correct action for the update
         }
         function closeModal() {
             document.getElementById('modal').classList.add('hidden');
@@ -91,9 +91,9 @@
         }
 
         function openConfirmDelete(userId) {
-            document.getElementById('confirmDeleteModal').classList.remove('hidden');
-            document.getElementById('deleteForm').action = '/dashboard/' + {{ $user->id }};
-        }
+        document.getElementById('confirmDeleteModal').classList.remove('hidden');
+        document.getElementById('deleteForm').action = '/dashboard/' + userId; // Use the passed userId
+    }
 
         function closeConfirmDelete() {
             document.getElementById('confirmDeleteModal').classList.add('hidden');
