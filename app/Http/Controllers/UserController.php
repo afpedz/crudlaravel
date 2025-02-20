@@ -3,6 +3,7 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class UserController extends Controller
 {
@@ -41,8 +42,16 @@ class UserController extends Controller
     {
         $user = User::findOrFail($id);
         $user->delete();
+        // Check if the authenticated user is trying to delete their own account
+        if (Auth::id() === $user->id) {
+            // Log out the user
+            Auth::logout();
+            
+            // Return the deleted user ID and logged out status as JSON
+            return response()->json(['id' => $id, 'loggedOut' => true]);
+        }
     
         // Return the deleted user ID as JSON
-        return response()->json(['id' => $id]);
+        return response()->json(['id' => $id, 'loggedOut' => false]);
     }
 }
