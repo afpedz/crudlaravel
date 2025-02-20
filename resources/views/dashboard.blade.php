@@ -20,16 +20,16 @@
             <tbody>
                 @if ($users->count() > 0)
                     @foreach ($users as $user)
-                        <tr class="border border-gray-300 text-gray-700 hover:bg-gray-50">
-                        <td class="border border-gray-300 px-5 py-2 text-center">{{ $user->id }}</td>
-                        <td class="border border-gray-300 px-5 py-2">{{ $user->name }}</td>
-                        <td class="border border-gray-300 px-5 py-2">{{ $user->email }}</td>
-                        <td class="border border-gray-300 px-5 py-2 text-center">
-                        <button onclick="openModal('{{ $user->id }}', '{{ $user->name }}', '{{ $user->email }}')" class="text-blue-500 hover:underline">Edit</button>
-                        |
-                        <button onclick="openConfirmDelete('{{ $user->id }}')" class="text-red-500 hover:underline">Delete</button>
-                        </td>
-                </tr>
+                        <tr class="border border-gray-300 text-gray-700 hover:bg-gray-50" data-id="{{ $user->id }}">
+                            <td class="border border-gray-300 px-5 py-2 text-center">{{ $user->id }}</td>
+                            <td class="border border-gray-300 px-5 py-2">{{ $user->name }}</td>
+                            <td class="border border-gray-300 px-5 py-2">{{ $user->email }}</td>
+                            <td class="border border-gray-300 px-5 py-2 text-center">
+                                <button onclick="openModal('{{ $user->id }}', '{{ $user->name }}', '{{ $user->email }}')" class="text-blue-500 hover:underline">Edit</button>
+                                |
+                                <button onclick="openConfirmDelete('{{ $user->id }}')" class="text-red-500 hover:underline">Delete</button>
+                            </td>
+                        </tr>
                     @endforeach
                 @endif
             </tbody>
@@ -74,7 +74,7 @@
             </div>
         </div>
     </div>
-
+    <script src="jquery-3.7.1.min.js"></script>
     <script>
         function openModal(id, name, email) {
             document.getElementById('modal').classList.remove('hidden');
@@ -98,6 +98,71 @@
         function closeConfirmDelete() {
             document.getElementById('confirmDeleteModal').classList.add('hidden');
         }
+    //for updating ajax
+    document.addEventListener('DOMContentLoaded', function() {
+        document.getElementById('editForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const formData = new FormData(this);
+            const actionUrl = this.action;
+            fetch(actionUrl, {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest',
+                },
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                // Update the table row with the new data
+                const row = document.querySelector(`tr[data-id="${data.id}"]`);
+                row.querySelector('td:nth-child(2)').textContent = data.name;
+                row.querySelector('td:nth-child(3)').textContent = data.email;
+                closeModal();
+            })
+            .catch(error => {
+                console.error('There was a problem with the fetch operation:', error);
+            });
+        });
+    });
+
+    document.addEventListener('DOMContentLoaded', function() {
+        document.getElementById('deleteForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const formData = new FormData(this);
+            const actionUrl = this.action;
+
+            fetch(actionUrl, {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest',
+                },
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                // Remove the deleted user row from the table
+                const row = document.querySelector(`tr[data-id="${data.id}"]`);
+                if (row) {
+                    row.remove();
+                }
+                closeConfirmDelete();
+            })
+            .catch(error => {
+                console.error('There was a problem with the fetch operation:', error);
+            });
+        });
+    });
 
     </script>
 </x-layout>

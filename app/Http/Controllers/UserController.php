@@ -21,13 +21,19 @@ class UserController extends Controller
             'name' => 'required|max:255',
             'email' => 'required|email|unique:users,email,' . $id, 
         ]);
-
+    
         $user = User::findOrFail($id);
         $user->update([
             'name' => $request->input('name'),
             'email' => $request->input('email'),
         ]);
-        return redirect()->route('dashboard');
+    
+        // Return the updated user data as JSON
+        return response()->json([
+            'id' => $user->id,
+            'name' => $user->name,
+            'email' => $user->email,
+        ]);
     }
 
 
@@ -35,6 +41,8 @@ class UserController extends Controller
     {
         $user = User::findOrFail($id);
         $user->delete();
-        return redirect()->route('dashboard');
+    
+        // Return the deleted user ID as JSON
+        return response()->json(['id' => $id]);
     }
 }

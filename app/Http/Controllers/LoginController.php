@@ -11,15 +11,15 @@ class LoginController extends Controller
         return view('login',['title' => 'Login']);
     }
     public function store(Request $request){
-        $this->validate($request,[
-            'email' =>['required','email'],
-            'password' =>['required']
+        $this->validate($request, [
+            'email' => ['required', 'email'],
+            'password' => ['required']
         ]);
-        
-        if(!Auth::attempt($request->only('email','password'))){
-            return back()->with('status','Invalid login credentials');
+    
+        if (!Auth::attempt($request->only('email', 'password'))) {
+            return response()->json(['message' => 'Invalid login credentials'], 401);
         }
-
-        return redirect()->route('dashboard');
+    
+        return response()->json(['redirect' => route('dashboard')]);
     }
 }
