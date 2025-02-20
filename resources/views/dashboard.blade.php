@@ -81,24 +81,23 @@
             document.getElementById('userId').value = id;
             document.getElementById('userName').value = name;
             document.getElementById('userEmail').value = email;
-            document.getElementById('editForm').action = '/dashboard/' + id; // Set the correct action for the update
+            document.getElementById('editForm').action = '/dashboard/' + id;
         }
         function closeModal() {
             document.getElementById('modal').classList.add('hidden');
         }
 
         function openConfirmDelete(userId) {
-            const currentUserId = '{{ Auth::id() }}'; // Get the currently authenticated user's ID
+            const currentUserId = '{{ Auth::id() }}';
 
-            // Check if the user is trying to delete their own account
-            if (userId.toString() === currentUserId) { // Ensure both are strings for comparison
+            if (userId == currentUserId) {
                 document.getElementById('confirmDeleteMessage').textContent = "You are about to delete your own user ID, doing so will log you out. Do you wish to continue?";
             } else {
                 document.getElementById('confirmDeleteMessage').textContent = "Are you sure you want to delete this user?";
             }
 
             document.getElementById('confirmDeleteModal').classList.remove('hidden');
-            document.getElementById('deleteForm').action = '/dashboard/' + userId; // Set the action for the delete form
+            document.getElementById('deleteForm').action = '/dashboard/' + userId; 
         }
 
 
