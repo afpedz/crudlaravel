@@ -1,8 +1,19 @@
 <x-layout>
 
-    <x:slot name="title">
-        Dashboard
-    </x:slot>
+    <x-slot:title>
+        Users
+    </x-slot>
+
+    <x-slot:action>
+        Add User
+    </x-slot>
+
+
+    <x-slot:onclick>
+        addUser()
+    </x-slot>
+
+    
 
     <div class="max-w-7xl mx-auto mt-6">
         <table class="w-full border-collapse border border-gray-300 shadow-lg rounded-lg overflow-hidden">
@@ -51,7 +62,7 @@
                 </div>
 
                 <div class="flex justify-between gap-4">
-                    <button type="button" onclick="closeModal()" class="px-4 py-2 bg-gray-300 text-white rounded-md hover:bg-gray-400 w-full">Cancel</button>
+                    <button type="button" onclick="closeModal()" class="px-4 py-2 bg-gray-600 text-white rounded-md hover:bg-gray-700 w-full">Cancel</button>
                     <button type="submit" class="px-4 py-2 bg-gray-800 text-white rounded-md hover:bg-gray-900 w-full">Save Changes</button>
                 </div>
             </form>
@@ -62,7 +73,7 @@
         <div class="bg-white p-8 rounded-lg w-xs">
             <h2 id="confirmDeleteMessage" class="text-xl font-semibold text-center mb-4">Are you sure you want to delete this user?</h2>
             <div class="flex justify-between gap-4">
-                <button onclick="closeConfirmDelete()" class="px-4 py-2 bg-gray-300 text-white rounded-md hover:bg-gray-400 w-full">Cancel</button>
+                <button onclick="closeConfirmDelete()" class="px-4 py-2 bg-gray-800 text-white rounded-md hover:bg-gray-900 w-full">Cancel</button>
                 <form id="deleteForm" action="" method="POST" class="inline-block w-full">
                     @csrf
                     @method('DELETE')
@@ -192,6 +203,10 @@
                     });
             });
         });
+
+        function addUser() {
+        //   create a modal for add user before adding a function 
+        }
 
     </script>
 </x-layout>
