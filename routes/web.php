@@ -14,7 +14,7 @@ Route::get('/',  function() {
     ]);
 })->name("login");
 
-Route::post('/login', [AuthController::class,'login']);
+Route::post('/', [AuthController::class,'login']);
 Route::get('/register', function() {
     return view('register', [
         "title" => "Register",

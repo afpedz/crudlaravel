@@ -1,16 +1,13 @@
 <x-layout>
-    <div class="flex flex-auto justify-between mb-5 m-10">
-        <h1 class="text-2xl font-bold text-center text-gray-700">{{ $title }}</h1>
-        <form action="{{ route('logout') }}" method="POST" class="text-center">
-            @csrf
-            <button type="submit" class="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600">Logout</button>
-        </form>
-    </div>
+
+    <x:slot name="title">
+        Dashboard
+    </x:slot>
 
     <div class="max-w-7xl mx-auto mt-6">
         <table class="w-full border-collapse border border-gray-300 shadow-lg rounded-lg overflow-hidden">
             <thead>
-                <tr class="bg-gray-100 text-gray-700">
+                <tr class="bg-gray-800 text-white">
                     <th class="border border-gray-300 px-5 py-2">ID</th>
                     <th class="border border-gray-300 px-5 py-2">Full Name</th>
                     <th class="border border-gray-300 px-5 py-2">Email</th>
@@ -19,18 +16,18 @@
             </thead>
             <tbody>
                 @if ($users->count() > 0)
-                    @foreach ($users as $user)
-                        <tr class="border border-gray-300 text-gray-700 hover:bg-gray-50" data-id="{{ $user->id }}">
-                            <td class="border border-gray-300 px-5 py-2 text-center">{{ $user->id }}</td>
-                            <td class="border border-gray-300 px-5 py-2">{{ $user->name }}</td>
-                            <td class="border border-gray-300 px-5 py-2">{{ $user->email }}</td>
-                            <td class="border border-gray-300 px-5 py-2 text-center">
-                                <button onclick="openModal('{{ $user->id }}', '{{ $user->name }}', '{{ $user->email }}')" class="text-blue-500 hover:underline">Edit</button>
-                                |
-                                <button onclick="openConfirmDelete('{{ $user->id }}')" class="text-red-500 hover:underline">Delete</button>
-                            </td>
-                        </tr>
-                    @endforeach
+                @foreach ($users as $user)
+                <tr class="border border-gray-300 text-gray-700 hover:bg-gray-50" data-id="{{ $user->id }}">
+                    <td class="border border-gray-300 px-5 py-2 text-center">{{ $user->id }}</td>
+                    <td class="border border-gray-300 px-5 py-2">{{ $user->name }}</td>
+                    <td class="border border-gray-300 px-5 py-2">{{ $user->email }}</td>
+                    <td class="border border-gray-300 px-5 py-2 text-center">
+                        <button onclick="openModal('{{ $user->id }}', '{{ $user->name }}', '{{ $user->email }}')" class="text-blue-500 hover:underline">Edit</button>
+                        |
+                        <button onclick="openConfirmDelete('{{ $user->id }}')" class="text-red-500 hover:underline">Delete</button>
+                    </td>
+                </tr>
+                @endforeach
                 @endif
             </tbody>
         </table>
@@ -55,7 +52,7 @@
 
                 <div class="flex justify-between gap-4">
                     <button type="button" onclick="closeModal()" class="px-4 py-2 bg-gray-300 text-white rounded-md hover:bg-gray-400 w-full">Cancel</button>
-                    <button type="submit" class="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 w-full">Save Changes</button>
+                    <button type="submit" class="px-4 py-2 bg-gray-800 text-white rounded-md hover:bg-gray-900 w-full">Save Changes</button>
                 </div>
             </form>
         </div>
@@ -74,7 +71,7 @@
             </div>
         </div>
     </div>
-    <script src="jquery-3.7.1.min.js"></script>
+    
     <script>
         function openModal(id, name, email) {
             document.getElementById('modal').classList.remove('hidden');
@@ -83,6 +80,7 @@
             document.getElementById('userEmail').value = email;
             document.getElementById('editForm').action = '/dashboard/' + id;
         }
+
         function closeModal() {
             document.getElementById('modal').classList.add('hidden');
         }
@@ -97,84 +95,84 @@
             }
 
             document.getElementById('confirmDeleteModal').classList.remove('hidden');
-            document.getElementById('deleteForm').action = '/dashboard/' + userId; 
+            document.getElementById('deleteForm').action = '/dashboard/' + userId;
         }
 
 
         function closeConfirmDelete() {
             document.getElementById('confirmDeleteModal').classList.add('hidden');
         }
-    //for updating ajax
-    document.addEventListener('DOMContentLoaded', function() {
-        document.getElementById('editForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            const formData = new FormData(this);
-            const actionUrl = this.action;
-            fetch(actionUrl, {
-                method: 'POST',
-                body: formData,
-                headers: {
-                    'X-Requested-With': 'XMLHttpRequest',
-                },
-            })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                return response.json();
-            })
-            .then(data => {
-                // Update the table row with the new data
-                const row = document.querySelector(`tr[data-id="${data.id}"]`);
-                row.querySelector('td:nth-child(2)').textContent = data.name;
-                row.querySelector('td:nth-child(3)').textContent = data.email;
-                closeModal();
-            })
-            .catch(error => {
-                console.error('There was a problem with the fetch operation:', error);
+        //for updating ajax
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('editForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                const formData = new FormData(this);
+                const actionUrl = this.action;
+                fetch(actionUrl, {
+                        method: 'POST'
+                        , body: formData
+                        , headers: {
+                            'X-Requested-With': 'XMLHttpRequest'
+                        , }
+                    , })
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Network response was not ok');
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        // Update the table row with the new data
+                        const row = document.querySelector(`tr[data-id="${data.id}"]`);
+                        row.querySelector('td:nth-child(2)').textContent = data.name;
+                        row.querySelector('td:nth-child(3)').textContent = data.email;
+                        closeModal();
+                    })
+                    .catch(error => {
+                        console.error('There was a problem with the fetch operation:', error);
+                    });
             });
         });
-    });
-    //for deletion ajax
-    document.addEventListener('DOMContentLoaded', function() {
-        document.getElementById('deleteForm').addEventListener('submit', function(e) {
-            e.preventDefault();
+        //for deletion ajax
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('deleteForm').addEventListener('submit', function(e) {
+                e.preventDefault();
 
-            const formData = new FormData(this);
-            const actionUrl = this.action;
+                const formData = new FormData(this);
+                const actionUrl = this.action;
 
-            fetch(actionUrl, {
-                method: 'POST',
-                body: formData,
-                headers: {
-                    'X-Requested-With': 'XMLHttpRequest',
-                },
-            })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                return response.json();
-            })
-            .then(data => {
-            // Check if the user was logged out
-                if (data.loggedOut) {
-                    // Redirect to the login page
-                    window.location.href = '/login'; // Adjust the URL as needed
-                } else {
-                    // Remove the deleted user row from the table
-                    const row = document.querySelector(`tr[data-id="${data.id}"]`);
-                    if (row) {
-                        row.remove();
-                    }
-                    closeConfirmDelete();
-                }
-            })
-            .catch(error => {
-                console.error('There was a problem with the fetch operation:', error);
+                fetch(actionUrl, {
+                        method: 'POST'
+                        , body: formData
+                        , headers: {
+                            'X-Requested-With': 'XMLHttpRequest'
+                        , }
+                    , })
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Network response was not ok');
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        // Check if the user was logged out
+                        if (data.loggedOut) {
+                            // Redirect to the login page
+                            window.location.href = '/login'; // Adjust the URL as needed
+                        } else {
+                            // Remove the deleted user row from the table
+                            const row = document.querySelector(`tr[data-id="${data.id}"]`);
+                            if (row) {
+                                row.remove();
+                            }
+                            closeConfirmDelete();
+                        }
+                    })
+                    .catch(error => {
+                        console.error('There was a problem with the fetch operation:', error);
+                    });
             });
         });
-    });
 
     </script>
 </x-layout>
