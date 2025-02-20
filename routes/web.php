@@ -29,3 +29,4 @@ Route::middleware('auth')->group(function () {
     Route::delete('/dashboard/{id}', [UserController::class, 'destroy'])->name('user.destroy');
     Route::post('/logout', [AuthController::class,'logout'])->name('logout');
 });
+Route::get('/dashboard/{id}', [UserController::class, 'show'])->name('users.show');

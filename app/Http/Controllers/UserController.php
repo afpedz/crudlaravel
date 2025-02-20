@@ -14,7 +14,11 @@ class UserController extends Controller
         return view('dashboard', ['user' => $user]);
     }
 
-
+    public function show($id)
+    {
+        $user = User::findOrFail($id);
+        return response()->json($user);
+    }
     public function update(Request $request, $id)
     {
         $request->validate([
