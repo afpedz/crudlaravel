@@ -25,5 +25,11 @@ Route::middleware('auth')->group(function () {
     Route::put('/dashboard/{id}', [UserController::class, 'update'])->name('users.update');
     Route::delete('/dashboard/{id}', [UserController::class, 'destroy'])->name('user.destroy');
     Route::post('/logout', [AuthController::class,'logout'])->name('logout');
+    Route::get('/category', function() {
+        return view('category');
+    });
+    Route::get('/products', function() {
+        return view('products');
+    });
 });
 Route::get('/dashboard/{id}', [UserController::class, 'show'])->name('users.show');
