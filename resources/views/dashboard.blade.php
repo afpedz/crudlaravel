@@ -110,128 +110,128 @@
 
                 <script>
                     function openModal(id, name, email) {
-            document.getElementById('modal').classList.remove('hidden');
-            document.getElementById('userId').value = id; // Set the hidden user ID
-            document.getElementById('editForm').action = '/dashboard/' + id; // Set the form action
+                        document.getElementById('modal').classList.remove('hidden');
+                        document.getElementById('userId').value = id; // Set the hidden user ID
+                        document.getElementById('editForm').action = '/dashboard/' + id; // Set the form action
 
             // Fetch the user data from the server
-            fetch(`/dashboard/${id}`)
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('Network response was not ok');
+                        fetch(`/dashboard/${id}`)
+                            .then(response => {
+                                if (!response.ok) {
+                                    throw new Error('Network response was not ok');
+                                }
+                                return response.json();
+                            })
+                            .then(data => {
+                                // Set the name and email inputs with the fetched data
+                                document.getElementById('userName').value = data.name; // Set the name input
+                                document.getElementById('userEmail').value = data.email; // Set the email input
+                            })
+                            .catch(error => {
+                                console.error('There was a problem with the fetch operation:', error);
+                            });
                     }
-                    return response.json();
-                })
-                .then(data => {
-                    // Set the name and email inputs with the fetched data
-                    document.getElementById('userName').value = data.name; // Set the name input
-                    document.getElementById('userEmail').value = data.email; // Set the email input
-                })
-                .catch(error => {
-                    console.error('There was a problem with the fetch operation:', error);
-                });
-        }
 
-        function closeModal() {
-            document.getElementById('modal').classList.add('hidden');
-        }
+                    function closeModal() {
+                        document.getElementById('modal').classList.add('hidden');
+                    }
 
-        function openConfirmDelete(userId) {
-            const currentUserId = '{{ Auth::id() }}';
+                    function openConfirmDelete(userId) {
+                        const currentUserId = '{{ Auth::id() }}';
 
-            if (userId == currentUserId) {
-                document.getElementById('confirmDeleteMessage').textContent = "You are about to delete your own user ID, doing so will log you out. Do you wish to continue?";
-            } else {
-                document.getElementById('confirmDeleteMessage').textContent = "Are you sure you want to delete this user?";
-            }
-
-            document.getElementById('confirmDeleteModal').classList.remove('hidden');
-            document.getElementById('deleteForm').action = '/dashboard/' + userId;
-        }
-
-
-        function closeConfirmDelete() {
-            document.getElementById('confirmDeleteModal').classList.add('hidden');
-        }
-        //for updating ajax
-        document.addEventListener('DOMContentLoaded', function() {
-            document.getElementById('editForm').addEventListener('submit', function(e) {
-                e.preventDefault();
-                const formData = new FormData(this);
-                const actionUrl = this.action;
-                fetch(actionUrl, {
-                        method: 'POST'
-                        , body: formData
-                        , headers: {
-                            'X-Requested-With': 'XMLHttpRequest'
-                        , }
-                    , })
-                    .then(response => {
-                        if (!response.ok) {
-                            throw new Error('Network response was not ok');
-                        }
-                        return response.json();
-                    })
-                    .then(data => {
-                        // Update the table row with the new data
-                        const row = document.querySelector(`tr[data-id="${data.id}"]`);
-                        if (row) {
-                            row.querySelector('td:nth-child(2)').textContent = data.name; // Update name
-                            row.querySelector('td:nth-child(3)').textContent = data.email; // Update email
-                        }
-                        // Optionally, you can call openModal here to show the updated data
-                        // openModal(data.id, data.name, data.email);
-                        closeModal();
-                    })
-                    .catch(error => {
-                        console.error('There was a problem with the fetch operation:', error);
-                    });
-            });
-        });
-        //for deletion ajax
-        document.addEventListener('DOMContentLoaded', function() {
-            document.getElementById('deleteForm').addEventListener('submit', function(e) {
-                e.preventDefault();
-
-                const formData = new FormData(this);
-                const actionUrl = this.action;
-
-                fetch(actionUrl, {
-                        method: 'POST'
-                        , body: formData
-                        , headers: {
-                            'X-Requested-With': 'XMLHttpRequest'
-                        , }
-                    , })
-                    .then(response => {
-                        if (!response.ok) {
-                            throw new Error('Network response was not ok');
-                        }
-                        return response.json();
-                    })
-                    .then(data => {
-                        // Check if the user was logged out
-                        if (data.loggedOut) {
-                            // Redirect to the login page
-                            window.location.href = '/login'; // Adjust the URL as needed
+                        if (userId == currentUserId) {
+                            document.getElementById('confirmDeleteMessage').textContent = "You are about to delete your own user ID, doing so will log you out. Do you wish to continue?";
                         } else {
-                            // Remove the deleted user row from the table
-                            const row = document.querySelector(`tr[data-id="${data.id}"]`);
-                            if (row) {
-                                row.remove();
-                            }
-                            closeConfirmDelete();
+                            document.getElementById('confirmDeleteMessage').textContent = "Are you sure you want to delete this user?";
                         }
-                    })
-                    .catch(error => {
-                        console.error('There was a problem with the fetch operation:', error);
-                    });
-            });
-        });
 
-        function addUser() {
-        //   create a modal for add user before adding a function 
-        }
+                        document.getElementById('confirmDeleteModal').classList.remove('hidden');
+                        document.getElementById('deleteForm').action = '/dashboard/' + userId;
+                    }
+
+
+                    function closeConfirmDelete() {
+                        document.getElementById('confirmDeleteModal').classList.add('hidden');
+                    }
+                    //for updating ajax
+                    document.addEventListener('DOMContentLoaded', function() {
+                        document.getElementById('editForm').addEventListener('submit', function(e) {
+                            e.preventDefault();
+                            const formData = new FormData(this);
+                            const actionUrl = this.action;
+                            fetch(actionUrl, {
+                                    method: 'POST'
+                                    , body: formData
+                                    , headers: {
+                                        'X-Requested-With': 'XMLHttpRequest'
+                                    , }
+                                , })
+                                .then(response => {
+                                    if (!response.ok) {
+                                        throw new Error('Network response was not ok');
+                                    }
+                                    return response.json();
+                                })
+                                .then(data => {
+                                    // Update the table row with the new data
+                                    const row = document.querySelector(`tr[data-id="${data.id}"]`);
+                                    if (row) {
+                                        row.querySelector('td:nth-child(2)').textContent = data.name; // Update name
+                                        row.querySelector('td:nth-child(3)').textContent = data.email; // Update email
+                                    }
+                                    // Optionally, you can call openModal here to show the updated data
+                                    // openModal(data.id, data.name, data.email);
+                                    closeModal();
+                                })
+                                .catch(error => {
+                                    console.error('There was a problem with the fetch operation:', error);
+                                });
+                        });
+                    });
+                    //for deletion ajax
+                    document.addEventListener('DOMContentLoaded', function() {
+                        document.getElementById('deleteForm').addEventListener('submit', function(e) {
+                            e.preventDefault();
+
+                            const formData = new FormData(this);
+                            const actionUrl = this.action;
+
+                            fetch(actionUrl, {
+                                    method: 'POST'
+                                    , body: formData
+                                    , headers: {
+                                        'X-Requested-With': 'XMLHttpRequest'
+                                    , }
+                                , })
+                                .then(response => {
+                                    if (!response.ok) {
+                                        throw new Error('Network response was not ok');
+                                    }
+                                    return response.json();
+                                })
+                                .then(data => {
+                                    // Check if the user was logged out
+                                    if (data.loggedOut) {
+                                        // Redirect to the login page
+                                        window.location.href = '/login'; // Adjust the URL as needed
+                                    } else {
+                                        // Remove the deleted user row from the table
+                                        const row = document.querySelector(`tr[data-id="${data.id}"]`);
+                                        if (row) {
+                                            row.remove();
+                                        }
+                                        closeConfirmDelete();
+                                    }
+                                })
+                                .catch(error => {
+                                    console.error('There was a problem with the fetch operation:', error);
+                                });
+                        });
+                    });
+
+                    function addUser() {
+                    //   create a modal for add user before adding a function 
+                    }
 
                 </script>
 </x-layout>
