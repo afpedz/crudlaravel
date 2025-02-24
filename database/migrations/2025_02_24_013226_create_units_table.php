@@ -12,6 +12,7 @@ class CreateUnitsTable extends Migration
             $table->id(); 
             $table->string('name'); // Unit name (e.g., pcs, box, packs)
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

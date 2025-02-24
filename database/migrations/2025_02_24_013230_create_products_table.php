@@ -16,6 +16,7 @@ class CreateProductsTable extends Migration
             $table->foreignId('unit_id')->constrained()->onDelete('cascade'); // Foreign key to units
             $table->decimal('price', 10, 2); 
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 
