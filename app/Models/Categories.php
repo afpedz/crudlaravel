@@ -6,7 +6,10 @@ use Illuminate\Database\Eloquent\Model;
 
 class Categories extends Model
 {
-    protected $fillable = ['name', 'parent_id'];
+    protected $fillable = [
+        'name', 
+    'parent_id'
+    ];
 
     // A category can have many products
     public function products()

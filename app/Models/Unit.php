@@ -6,7 +6,9 @@ use Illuminate\Database\Eloquent\Model;
 
 class Unit extends Model
 {
-    protected $fillable = ['name'];
+    protected $fillable = [
+        'name'
+    ];
 
     // A unit can have many products
     public function products()
