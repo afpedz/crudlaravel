@@ -243,8 +243,6 @@
                                         row.querySelector('td:nth-child(2)').textContent = data.name; // Update name
                                         row.querySelector('td:nth-child(3)').textContent = data.email; // Update email
                                     }
-                                    // Optionally, you can call openModal here to show the updated data
-                                    // openModal(data.id, data.name, data.email);
                                     closeModal();
                                 })
                                 .catch(error => {

@@ -10,7 +10,7 @@
         @endif
         <span class="font-bold">{{ $category->name }}</span>
         <div class="ml-auto">
-            <button onclick="openModal('{{ $category->id }}', '{{ $category->name }}')"
+            <button onclick="openEditModal('{{ $category->id }}', '{{ $category->name }}')"
                 class="text-gray-800 hover:underline">Edit</button>
             <button onclick="openConfirmDelete('{{ $category->id }}')"
                 class="text-red-500 hover:underline">Delete</button>
