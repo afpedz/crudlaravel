@@ -12,7 +12,7 @@ class CreateCategoriesTable extends Migration
             $table->string('name'); 
             $table->foreignId('parent_id')->nullable()->constrained('categories')->onDelete('cascade'); // Recursive foreign key
             $table->timestamps();
-            $table->softDeletes();
+            $table->softDeletes()->nullable();
         });
     }
 
