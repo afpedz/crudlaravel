@@ -24,42 +24,44 @@ class CategoriesController extends Controller
     
         Categories::create($request->only('name', 'parent_id'));
     
-        $categoryTree = Categories::with('children')->whereNull('parent_id')->orderBy('name')->get();
-    
-        return response()->json($categoryTree);
+        return response()->json([
+            'categoryTree' => Categories::with('children')->orderBy('name')->get(),
+            'categories' => Categories::orderBy('name')->get() 
+        ]);
     }
+    
     public function update(Request $request, $id)
     {
         $request->validate([
-            'name' => [
-                'required',
-                'string',
-                'max:255',
-            ],
+            'name' => 'required|string|max:255',
             'parent_id' => 'nullable|exists:categories,id', 
         ]);
     
-
         $category = Categories::findOrFail($id);
         $category->update($request->only('name', 'parent_id'));
-
-        $categoryTree = Categories::with('children')->whereNull('parent_id')->orderBy('name')->get();
-
-
-        return response()->json($categoryTree);
+    
+        return response()->json([
+            'categoryTree' => Categories::with('children')->orderBy('name')->get(), 
+            'categories' => Categories::orderBy('name')->get() 
+        ]);
     }
+    
     public function destroy($id)
     {
         $category = Categories::with('children')->findOrFail($id);
+        
+        foreach ($category->children as $child) {
+            $this->destroy($child->id);
+        }
     
-        $category->children()->delete();
         $category->delete(); 
     
-        $categoryTree = Categories::with('children')->whereNull('parent_id')->get();
-    
-        return response()->json($categoryTree);
+        return response()->json([
+            'categoryTree' => Categories::with('children')->orderBy('name')->get(), // Fetch all categories
+            'categories' => Categories::orderBy('name')->get() // Return sorted categories
+        ]);
     }
-    
+        
 
 
 }

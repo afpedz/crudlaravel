@@ -133,17 +133,34 @@ function toggleChildren(id) {
             document.getElementById('confirmDeleteModal').classList.remove('hidden');
             document.getElementById('deleteForm').action = '/categories/' + categoryId; 
         }
+        //refreshes the category list
         function refreshCategoryList(categories) {
-        const categoryList = document.querySelector('ul.list-none');
-        categoryList.innerHTML = '';
-
-        categories.forEach(category => {
-            if (category.parent_id === null) {
-                categoryList.appendChild(createCategoryItem(category));
+            const categoryList = document.querySelector('ul.list-none');
+            if (!categoryList) {
+                console.error('Category list element not found.');
+                return;
             }
-        });
-        }
 
+            categoryList.innerHTML = '';
+
+            const categoryMap = {};
+            categories.forEach(category => {
+                categoryMap[category.id] = { ...category, children: [] }; 
+            });
+
+            categories.forEach(category => {
+                if (category.parent_id) {
+                    categoryMap[category.parent_id].children.push(categoryMap[category.id]);
+                }
+            });
+
+            Object.values(categoryMap).forEach(category => {
+                if (!category.parent_id) {
+                    categoryList.appendChild(createCategoryItem(category));
+                }
+            });
+        }
+        //for when making a new category it checks if its a parent or child or child with child etc.
         function createCategoryItem(category) {
             const newCategoryItem = document.createElement('li');
             newCategoryItem.classList.add('py-2');
@@ -179,36 +196,57 @@ function toggleChildren(id) {
 
             return newCategoryItem;
         }
+        //refreshes the dropdown whenever the table is modified
+        function updateCategoryDropdown(categories) {
+            const parentCategorySelect = document.getElementById('parentCategory');
+            parentCategorySelect.innerHTML = '<option value="" selected>No Parent (Main Category)</option>'; // Reset options
 
+            // Sort categories alphabetically
+            categories.sort((a, b) => a.name.localeCompare(b.name));
+
+            categories.forEach(category => {
+                const option = document.createElement('option');
+                option.value = category.id;
+                option.textContent = category.name;
+                parentCategorySelect.appendChild(option);
+            });
+        }
     
-        //For adding categoriees AJAX
+        // For adding categories AJAX
         document.addEventListener('DOMContentLoaded', function () {
             document.getElementById('addCategoryForm').addEventListener('submit', function (e) {
-            e.preventDefault();
+                e.preventDefault();
 
-            const formData = new FormData(this);
-            const actionUrl = this.action;
+                const formData = new FormData(this);
+                const actionUrl = this.action;
 
-            fetch(actionUrl, {
-                method: 'POST',
-                body: formData,
-                headers: {
-                    'X-Requested-With': 'XMLHttpRequest',
-                },
-            })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                return response.json();
-            })
-            .then(data => {
-                refreshCategoryList(data);
-                closeAddCategoryModal();
-            })
-            .catch(error => {
-                console.error('There was a problem with the fetch operation:', error);
-             });
+                fetch(actionUrl, {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest',
+                    },
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    if (Array.isArray(data.categoryTree) && Array.isArray(data.categories)) {
+                        console.log('Data received:', data);
+
+                        refreshCategoryList(data.categoryTree);
+                        updateCategoryDropdown(data.categories); 
+                        closeAddCategoryModal();
+                    } else {
+                        console.error('Unexpected response structure:', data);
+                    }
+                })
+                .catch(error => {
+                    console.error('There was a problem with the fetch operation:', error);
+                });
             });
         });
 
@@ -233,8 +271,15 @@ function toggleChildren(id) {
                     return response.json();
                 })
                 .then(data => {
-                    refreshCategoryList(data);
-                    closeEditCategoryModal();
+                    if (Array.isArray(data.categoryTree) && Array.isArray(data.categories)) {
+                        console.log('Data received:', data);
+
+                        refreshCategoryList(data.categoryTree);
+                        updateCategoryDropdown(data.categories);
+                        closeEditCategoryModal();
+                    } else {
+                        console.error('Unexpected response structure:', data);
+                    }
                 })
                 .catch(error => {
                     console.error('There was a problem with the fetch operation:', error);
@@ -263,16 +308,21 @@ function toggleChildren(id) {
                     return response.json();
                 })
                 .then(data => {
-                    refreshCategoryList(data);
-                    closeConfirmDelete();
+                    if (Array.isArray(data.categoryTree) && Array.isArray(data.categories)) {
+                        console.log('Data received:', data);
+
+                        refreshCategoryList(data.categoryTree);
+                        updateCategoryDropdown(data.categories);
+                        closeConfirmDelete();
+                    } else {
+                        console.error('Unexpected response structure:', data);
+                    }
                 })
                 .catch(error => {
                     console.error('There was a problem with the fetch operation:', error);
                 });
             });
         });
-
-
     </script>
 
 </x-layout>
