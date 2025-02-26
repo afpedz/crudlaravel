@@ -10,9 +10,12 @@ class CategoriesController extends Controller
     public function index()
     {
         $categories = Categories::all();
-    
-        $categoryTree = Categories::with('children')->whereNull('parent_id')->orderBy('name')->paginate(50);
-    
+        
+        // Fetch categories with children and sort them
+        $categoryTree = Categories::with(['children' => function($query) {
+            $query->orderBy('name'); // Sort children alphabetically
+        }])->whereNull('parent_id')->orderBy('name')->paginate(50);
+        
         return view('category', compact('categories', 'categoryTree'));
     }
     public function store(Request $request)
@@ -44,8 +47,7 @@ class CategoriesController extends Controller
             'categoryTree' => Categories::with('children')->orderBy('name')->get(), 
             'categories' => Categories::orderBy('name')->get() 
         ]);
-    }
-    
+    }    
     public function destroy($id)
     {
         $category = Categories::with('children')->findOrFail($id);

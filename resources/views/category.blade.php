@@ -154,12 +154,14 @@ function toggleChildren(id) {
                 }
             });
 
-            Object.values(categoryMap).forEach(category => {
-                if (!category.parent_id) {
-                    categoryList.appendChild(createCategoryItem(category));
-                }
+            // Sort the top-level categories alphabetically
+            const sortedCategories = Object.values(categoryMap).filter(cat => !cat.parent_id)
+                .sort((a, b) => a.name.localeCompare(b.name));
+
+            sortedCategories.forEach(category => {
+                categoryList.appendChild(createCategoryItem(category));
             });
-        }
+        }        
         //for when making a new category it checks if its a parent or child or child with child etc.
         function createCategoryItem(category) {
             const newCategoryItem = document.createElement('li');
@@ -188,14 +190,18 @@ function toggleChildren(id) {
                 const childrenList = document.createElement('ul');
                 childrenList.classList.add('hidden', 'pl-5');
                 childrenList.id = `children-${category.id}`;
-                category.children.forEach(child => {
+
+                // Sort children alphabetically before appending
+                const sortedChildren = category.children.sort((a, b) => a.name.localeCompare(b.name));
+                sortedChildren.forEach(child => {
                     childrenList.appendChild(createCategoryItem(child));
                 });
+
                 newCategoryItem.appendChild(childrenList);
             }
 
             return newCategoryItem;
-        }
+        }       
         //refreshes the dropdown whenever the table is modified
         function updateCategoryDropdown(categories) {
             const parentCategorySelect = document.getElementById('parentCategory');
