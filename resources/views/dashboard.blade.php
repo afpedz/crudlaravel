@@ -10,7 +10,7 @@
 
 
             <x-slot:onclick>
-                addUser()
+                document.getElementById('addUserModal').classList.remove('hidden')
                 </x-slot>
 
 
@@ -58,7 +58,7 @@
                         </tbody>
                     </table>
                 </div>
-
+                {{-- edit modal --}}
                 <div id="modal"
                     class="fixed inset-0 bg-gray-500 bg-opacity-75 flex justify-center items-center z-50 hidden ">
                     <div class="bg-white p-8 rounded-lg w-1/4">
@@ -90,6 +90,51 @@
                     </div>
                 </div>
 
+
+
+                <div id="addUserModal"
+                    class="fixed inset-0 bg-gray-500 bg-opacity-75 flex justify-center items-center z-50 hidden">
+                    <div class="bg-white p-8 rounded-lg w-1/4">
+                        <h2 class="text-2xl font-bold text-center mb-4">Add User</h2>
+                        <form id="addForm" action="" method="POST">
+                            @csrf
+                            <div class="mb-4">
+                                <label for="name" class="block text-sm font-medium text-gray-700">Full Name</label>
+                                <input type="text" name="name" id="userName"
+                                    class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md" required />
+                            </div>
+
+                            <div class="mb-4">
+                                <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
+                                <input type="email" name="email" id="userEmail"
+                                    class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md" required />
+                            </div>
+
+                            <div class="mb-4">
+                                <label for="password" class="block text-sm font-medium text-gray-700">Password</label>
+                                <input type="password" name="password" id="userPassword"
+                                    class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md" required />
+                            </div>
+
+                            <div class="mb-4">
+                                <label for="confirm_password" class="block text-sm font-medium text-gray-700">Confirm
+                                    Password</label>
+                                <input type="password" name="confirm_password" id="confirmPassword"
+                                    class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md" required />
+                            </div>
+
+                            <div class="flex justify-between gap-4">
+                                <button type="button" onclick="closeAddUser()"
+                                    class="px-4 py-2 bg-gray-600 text-white rounded-md hover:bg-gray-700 w-full">Cancel</button>
+                                <button type="submit"
+                                    class="px-4 py-2 bg-gray-800 text-white rounded-md hover:bg-gray-900 w-full">Add
+                                    User</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+
                 <div id="confirmDeleteModal"
                     class="fixed inset-0 bg-gray-500 bg-opacity-75 flex justify-center items-center z-50 hidden w-auto h-auto">
                     <div class="bg-white p-8 rounded-lg w-xs">
@@ -114,7 +159,7 @@
                         document.getElementById('userId').value = id; // Set the hidden user ID
                         document.getElementById('editForm').action = '/dashboard/' + id; // Set the form action
 
-            // Fetch the user data from the server
+                        // Fetch the user data from the server
                         fetch(`/dashboard/${id}`)
                             .then(response => {
                                 if (!response.ok) {
@@ -131,6 +176,23 @@
                                 console.error('There was a problem with the fetch operation:', error);
                             });
                     }
+
+
+                    function addUser() {
+                        const modal = document.getElementById("addUserModal");
+                        modal.classList.remove("hidden");
+                    }
+
+                    function closeAddUser() {
+                        document.getElementById('addUserModal').classList.add('hidden');
+                    }
+
+                    // document.getElementById('addForm').addEventListener('submit', function(event) {
+                    //     event.preventDefault();
+                    //     console.log('User added!');
+                    //     closeAddUser();
+                    // });
+
 
                     function closeModal() {
                         document.getElementById('modal').classList.add('hidden');
@@ -154,18 +216,20 @@
                         document.getElementById('confirmDeleteModal').classList.add('hidden');
                     }
                     //for updating ajax
-                    document.addEventListener('DOMContentLoaded', function() {
-                        document.getElementById('editForm').addEventListener('submit', function(e) {
+                    document.addEventListener('DOMContentLoaded', function () {
+                        document.getElementById('editForm').addEventListener('submit', function (e) {
                             e.preventDefault();
                             const formData = new FormData(this);
                             const actionUrl = this.action;
                             fetch(actionUrl, {
-                                    method: 'POST'
-                                    , body: formData
-                                    , headers: {
-                                        'X-Requested-With': 'XMLHttpRequest'
-                                    , }
-                                , })
+                                method: 'POST'
+                                , body: formData
+                                , headers: {
+                                    'X-Requested-With': 'XMLHttpRequest'
+                                    ,
+                                }
+                                ,
+                            })
                                 .then(response => {
                                     if (!response.ok) {
                                         throw new Error('Network response was not ok');
@@ -189,20 +253,22 @@
                         });
                     });
                     //for deletion ajax
-                    document.addEventListener('DOMContentLoaded', function() {
-                        document.getElementById('deleteForm').addEventListener('submit', function(e) {
+                    document.addEventListener('DOMContentLoaded', function () {
+                        document.getElementById('deleteForm').addEventListener('submit', function (e) {
                             e.preventDefault();
 
                             const formData = new FormData(this);
                             const actionUrl = this.action;
 
                             fetch(actionUrl, {
-                                    method: 'POST'
-                                    , body: formData
-                                    , headers: {
-                                        'X-Requested-With': 'XMLHttpRequest'
-                                    , }
-                                , })
+                                method: 'POST'
+                                , body: formData
+                                , headers: {
+                                    'X-Requested-With': 'XMLHttpRequest'
+                                    ,
+                                }
+                                ,
+                            })
                                 .then(response => {
                                     if (!response.ok) {
                                         throw new Error('Network response was not ok');
@@ -230,7 +296,7 @@
                     });
 
                     function addUser() {
-                    //   create a modal for add user before adding a function 
+                        //   create a modal for add user before adding a function 
                     }
 
                 </script>
