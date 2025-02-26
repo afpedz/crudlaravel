@@ -60,12 +60,6 @@
                         <h2 class="text-2xl font-bold text-center mb-4">Add Category</h2>
                         <form id="addCategoryForm" action="" method="POST">
                             @csrf
-                            <div class="mb-4">
-                                <label for="category_id" class="block text-sm font-medium text-gray-700">Category
-                                    ID</label>
-                                <input type="text" name="id" id="categoryId"
-                                    class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md" required />
-                            </div>
 
                             <div class="mb-4">
                                 <label for="name" class="block text-sm font-medium text-gray-700">Category Name</label>
