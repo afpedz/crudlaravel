@@ -3,6 +3,7 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\CategoriesController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/',  function() {
@@ -33,3 +34,6 @@ Route::middleware('auth')->group(function () {
     });
 });
 Route::get('/dashboard/{id}', [UserController::class, 'show'])->name('users.show');
+Route::get('/category', [CategoriesController::class, 'index'])->name('categories.index');
+
+
