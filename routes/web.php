@@ -35,5 +35,6 @@ Route::middleware('auth')->group(function () {
 });
 Route::get('/dashboard/{id}', [UserController::class, 'show'])->name('users.show');
 Route::get('/category', [CategoriesController::class, 'index'])->name('categories.index');
+Route::resource('categories', CategoriesController::class);
 
 
