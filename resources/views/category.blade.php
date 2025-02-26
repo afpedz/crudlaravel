@@ -94,13 +94,13 @@ function toggleChildren(id) {
     const childrenList = document.getElementById(`children-${id}`);
     const arrow = document.getElementById(`arrow-${id}`);
     
-    if (childrenList) { // Check if childrenList exists
+    if (childrenList) { 
         if (childrenList.classList.contains('hidden')) {
             childrenList.classList.remove('hidden');
-            arrow.classList.add('rotate-180'); // Rotate the arrow
+            arrow.classList.add('rotate-180');
         } else {
             childrenList.classList.add('hidden');
-            arrow.classList.remove('rotate-180'); // Reset the arrow
+            arrow.classList.remove('rotate-180');
         }
     } else {
         console.error(`Children list for category ID ${id} not found.`);
@@ -135,7 +135,7 @@ function toggleChildren(id) {
         }
         function refreshCategoryList(categories) {
         const categoryList = document.querySelector('ul.list-none');
-        categoryList.innerHTML = ''; // Clear the existing list
+        categoryList.innerHTML = '';
 
         categories.forEach(category => {
             if (category.parent_id === null) {
@@ -145,41 +145,40 @@ function toggleChildren(id) {
         }
 
         function createCategoryItem(category) {
-    const newCategoryItem = document.createElement('li');
-    newCategoryItem.classList.add('py-2');
-    newCategoryItem.setAttribute('data-id', category.id); // Set data-id for future reference
+            const newCategoryItem = document.createElement('li');
+            newCategoryItem.classList.add('py-2');
+            newCategoryItem.setAttribute('data-id', category.id);
 
-    newCategoryItem.innerHTML = `
-        <div class="flex items-center">
-            ${category.children && category.children.length > 0 ? `
-                <button onclick="toggleChildren('${category.id}')" class="mr-2">
-                    <svg id="arrow-${category.id}" xmlns="http://www.w3.org/2000/svg" fill="none"
-                        viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 15l-3-3h6l-3 3z" />
-                    </svg>
-                </button>
-            ` : ''}
-            <span class="font-bold">${category.name}</span>
-            <div class="ml-auto">
-                <button onclick="openEditModal('${category.id}', '${category.name}')" class="text-gray-800 hover:underline">Edit</button>
-                <button onclick="openConfirmDelete('${category.id}')" class="text-red-500 hover:underline">Delete</button>
-            </div>
-        </div>
-    `;
+            newCategoryItem.innerHTML = `
+                <div class="flex items-center">
+                    ${category.children && category.children.length > 0 ? `
+                        <button onclick="toggleChildren('${category.id}')" class="mr-2">
+                            <svg id="arrow-${category.id}" xmlns="http://www.w3.org/2000/svg" fill="none"
+                                viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 15l-3-3h6l-3 3z" />
+                            </svg>
+                        </button>
+                    ` : ''}
+                    <span class="font-bold">${category.name}</span>
+                    <div class="ml-auto">
+                        <button onclick="openEditModal('${category.id}', '${category.name}')" class="text-gray-800 hover:underline">Edit</button>
+                        <button onclick="openConfirmDelete('${category.id}')" class="text-red-500 hover:underline">Delete</button>
+                    </div>
+                </div>
+            `;
 
-    // If the category has children, create a nested list
-    if (category.children && category.children.length > 0) {
-        const childrenList = document.createElement('ul');
-        childrenList.classList.add('hidden', 'pl-5');
-        childrenList.id = `children-${category.id}`; // Set the ID for the children list
-        category.children.forEach(child => {
-            childrenList.appendChild(createCategoryItem(child));
-        });
-        newCategoryItem.appendChild(childrenList);
-    }
+            if (category.children && category.children.length > 0) {
+                const childrenList = document.createElement('ul');
+                childrenList.classList.add('hidden', 'pl-5');
+                childrenList.id = `children-${category.id}`;
+                category.children.forEach(child => {
+                    childrenList.appendChild(createCategoryItem(child));
+                });
+                newCategoryItem.appendChild(childrenList);
+            }
 
-    return newCategoryItem;
-}
+            return newCategoryItem;
+        }
 
     
         //For adding categoriees AJAX
@@ -204,7 +203,6 @@ function toggleChildren(id) {
                 return response.json();
             })
             .then(data => {
-                // Refresh the entire category list
                 refreshCategoryList(data);
                 closeAddCategoryModal();
             })
@@ -216,65 +214,63 @@ function toggleChildren(id) {
 
         // For updating categories via AJAX
         document.addEventListener('DOMContentLoaded', function () {
-    document.getElementById('editForm').addEventListener('submit', function (e) {
-        e.preventDefault();
-        const formData = new FormData(this);
-        const actionUrl = this.action;
+            document.getElementById('editForm').addEventListener('submit', function (e) {
+                e.preventDefault();
+                const formData = new FormData(this);
+                const actionUrl = this.action;
 
-        fetch(actionUrl, {
-            method: 'POST',
-            body: formData,
-            headers: {
-                'X-Requested-With': 'XMLHttpRequest',
-            },
-        })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-            return response.json();
-        })
-        .then(data => {
-            // Refresh the entire category list
-            refreshCategoryList(data);
-            closeEditCategoryModal(); // Close the modal
-        })
-        .catch(error => {
-            console.error('There was a problem with the fetch operation:', error);
+                fetch(actionUrl, {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest',
+                    },
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    refreshCategoryList(data);
+                    closeEditCategoryModal();
+                })
+                .catch(error => {
+                    console.error('There was a problem with the fetch operation:', error);
+                });
+            });
         });
-    });
-});
 
         // For deleting categories via AJAX
         document.addEventListener('DOMContentLoaded', function () {
-    document.getElementById('deleteForm').addEventListener('submit', function (e) {
-        e.preventDefault();
-        const formData = new FormData(this);
-        const actionUrl = this.action;
+            document.getElementById('deleteForm').addEventListener('submit', function (e) {
+                e.preventDefault();
+                const formData = new FormData(this);
+                const actionUrl = this.action;
 
-        fetch(actionUrl, {
-            method: 'POST',
-            body: formData,
-            headers: {
-                'X-Requested-With': 'XMLHttpRequest',
-            },
-        })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-            return response.json();
-        })
-        .then(data => {
-            // Refresh the entire category list
-            refreshCategoryList(data);
-            closeConfirmDelete(); // Close the confirmation modal
-        })
-        .catch(error => {
-            console.error('There was a problem with the fetch operation:', error);
+                fetch(actionUrl, {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest',
+                    },
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    refreshCategoryList(data);
+                    closeConfirmDelete();
+                })
+                .catch(error => {
+                    console.error('There was a problem with the fetch operation:', error);
+                });
+            });
         });
-    });
-});
 
 
     </script>

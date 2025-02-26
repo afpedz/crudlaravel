@@ -157,9 +157,8 @@
                     function openModal(id, name, email) {
                         document.getElementById('modal').classList.remove('hidden');
                         document.getElementById('userId').value = id; // Set the hidden user ID
-                        document.getElementById('editForm').action = '/dashboard/' + id; // Set the form action
+                        document.getElementById('editForm').action = '/dashboard/' + id; 
 
-                        // Fetch the user data from the server
                         fetch(`/dashboard/${id}`)
                             .then(response => {
                                 if (!response.ok) {
@@ -168,7 +167,6 @@
                                 return response.json();
                             })
                             .then(data => {
-                                // Set the name and email inputs with the fetched data
                                 document.getElementById('userName').value = data.name; // Set the name input
                                 document.getElementById('userEmail').value = data.email; // Set the email input
                             })
@@ -186,13 +184,6 @@
                     function closeAddUser() {
                         document.getElementById('addUserModal').classList.add('hidden');
                     }
-
-                    // document.getElementById('addForm').addEventListener('submit', function(event) {
-                    //     event.preventDefault();
-                    //     console.log('User added!');
-                    //     closeAddUser();
-                    // });
-
 
                     function closeModal() {
                         document.getElementById('modal').classList.add('hidden');
@@ -274,12 +265,9 @@
                                     return response.json();
                                 })
                                 .then(data => {
-                                    // Check if the user was logged out
                                     if (data.loggedOut) {
-                                        // Redirect to the login page
-                                        window.location.href = '/login'; // Adjust the URL as needed
+                                        window.location.href = '/login';
                                     } else {
-                                        // Remove the deleted user row from the table
                                         const row = document.querySelector(`tr[data-id="${data.id}"]`);
                                         if (row) {
                                             row.remove();
@@ -292,10 +280,6 @@
                                 });
                         });
                     });
-
-                    function addUser() {
-                        //   create a modal for add user before adding a function 
-                    }
 
                 </script>
 </x-layout>
