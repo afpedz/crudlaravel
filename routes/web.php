@@ -37,8 +37,7 @@ Route::middleware('auth')->group(function () {
         return view('units');
     });
     Route::resource('units', UnitController::class);
-    Route::put('/units/{unit}', [UnitController::class, 'update'])->name('units.update');
-    Route::get('/units', [UnitController::class, 'index'])->name('units.index');
+    // Route::get('/units', [UnitController::class, 'index'])->name('units.index');
     Route::get('/dashboard/{id}', [UserController::class, 'show'])->name('users.show');
     Route::get('/category', [CategoriesController::class, 'index'])->name('categories.index');
     Route::resource('categories', CategoriesController::class);
