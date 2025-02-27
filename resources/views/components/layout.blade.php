@@ -42,6 +42,7 @@
                         <x-nav-link href="/dashboard" :active="request()->is('dashboard')">Users</x-nav-link>
                         <x-nav-link href="/products" :active="request()->is('products')"> Products</x-nav-link>
                         <x-nav-link href="/category" :active="request()->is('category')">Categories</x-nav-link>
+                        <x-nav-link href="/units" :active="request()->is('units')">Units</x-nav-link>
                     </div>
                 </div>
             </div>

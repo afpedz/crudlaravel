@@ -32,6 +32,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/products', function() {
         return view('products');
     });
+    Route::get('/units', function() {
+        return view('units');
+    });
 });
 Route::get('/dashboard/{id}', [UserController::class, 'show'])->name('users.show');
 Route::get('/category', [CategoriesController::class, 'index'])->name('categories.index');

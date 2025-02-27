@@ -1,17 +1,17 @@
 <x-layout>
 
     <x-slot:title>
-        Products
+        Unit
         </x-slot>
 
 
         <x-slot:action>
-            Add product
+            Add unit
             </x-slot>
 
 
             <x-slot:onclick>
-                document.getElementById('addProductModal').classList.remove('hidden');
+                document.getElementById('addUnit').classList.remove('hidden');
                 </x-slot>
 
 
@@ -22,11 +22,7 @@
                         <thead>
                             <tr class="bg-gray-800 text-white">
                                 <th class="border border-gray-300 px-5 py-2">ID</th>
-                                <th class="border border-gray-300 px-5 py-2">Product Code</th>
-                                <th class="border border-gray-300 px-5 py-2">Description</th>
-                                <th class="border border-gray-300 px-5 py-2">Category</th>
-                                <th class="border border-gray-300 px-5 py-2">Price</th>
-                                <th class="border border-gray-300 px-5 py-2">Unit</th>
+                                <th class="border border-gray-300 px-5 py-2">Name</th>
                                 <th class="border border-gray-300 px-5 py-2">Action</th>
                             </tr>
                         </thead>
@@ -70,55 +66,16 @@
                 {{-- product modal --}}
 
 
-                <div id="addProductModal"
+                <div id="addUnit"
                     class="fixed inset-0 bg-gray-500 bg-opacity-75 flex justify-center items-center z-50 hidden">
                     <div class="bg-white p-8 rounded-lg w-1/4">
-                        <h2 class="text-2xl font-bold text-center mb-4">Add Product</h2>
-                        <form id="addProductForm" action="" method="POST">
+                        <h2 class="text-2xl font-bold text-center mb-4">Add Unit</h2>
+                        <form id="addUnit" action="" method="POST">
                             @csrf
                             <div class="mb-4">
-                                <label for="product_code" class="block text-sm font-medium text-gray-700">Product
-                                    Code</label>
+                                <label for="product_code" class="block text-sm font-medium text-gray-700">Unit</label>
                                 <input type="text" name="product_code" id="productCode"
                                     class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md" required />
-                            </div>
-
-                            <div class="mb-4">
-                                <label for="description"
-                                    class="block text-sm font-medium text-gray-700">Description</label>
-                                <textarea name="description" id="productDescription"
-                                    class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md resize-none"
-                                    rows="2" required></textarea>
-                            </div>
-
-                            <div class="mb-4">
-                                <label for="category" class="block text-sm font-medium text-gray-700">Category</label>
-                                <select name="category" id="productCategory"
-                                    class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md" required>
-                                    <option value="" disabled selected>Select Category</option>
-                                    <option value="1">1</option>
-                                    <option value="2">2</option>
-                                    <option value="3">3</option>
-                                    <option value="4">4</option>
-                                </select>
-                            </div>
-
-                            <div class="mb-4">
-                                <label for="price" class="block text-sm font-medium text-gray-700">Price</label>
-                                <input type="number" step="0.01" name="price" id="productPrice"
-                                    class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md" required />
-                            </div>
-
-                            <div class="mb-4">
-                                <label for="unit" class="block text-sm font-medium text-gray-700">Unit</label>
-                                <select name="unit" id="productUnit"
-                                    class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md" required>
-                                    <option value="" disabled selected>Select Unit</option>
-                                    <option value="1">1</option>
-                                    <option value="2">2</option>
-                                    <option value="3">3</option>
-                                    <option value="4">4</option>
-                                </select>
                             </div>
 
                             <div class="flex justify-between gap-4">
@@ -126,18 +83,21 @@
                                     class="px-4 py-2 bg-gray-600 text-white rounded-md hover:bg-gray-700 w-full">Cancel</button>
                                 <button type="submit"
                                     class="px-4 py-2 bg-gray-800 text-white rounded-md hover:bg-gray-900 w-full">Add
-                                    Product</button>
+                                    Unit</button>
                             </div>
                         </form>
                     </div>
                 </div>
+
+
+
                 <script>
                     function showAddProductModal() {
-                        document.getElementById('addProductModal').classList.remove('hidden');
+                        document.getElementById('addUnit').classList.remove('hidden');
                     }
                 
                     function closeAddProductModal() {
-                        document.getElementById('addProductModal').classList.add('hidden');
+                        document.getElementById('addUnit').classList.add('hidden');
                     }
                 
                     // document.getElementById('addProductForm').addEventListener('submit', function(event) {
