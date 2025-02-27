@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\UnitController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\CategoriesController;
@@ -35,9 +36,13 @@ Route::middleware('auth')->group(function () {
     Route::get('/units', function() {
         return view('units');
     });
+    Route::resource('units', UnitController::class);
+    Route::put('/units/{unit}', [UnitController::class, 'update'])->name('units.update');
+    Route::get('/units', [UnitController::class, 'index'])->name('units.index');
+    Route::get('/dashboard/{id}', [UserController::class, 'show'])->name('users.show');
+    Route::get('/category', [CategoriesController::class, 'index'])->name('categories.index');
+    Route::resource('categories', CategoriesController::class);
 });
-Route::get('/dashboard/{id}', [UserController::class, 'show'])->name('users.show');
-Route::get('/category', [CategoriesController::class, 'index'])->name('categories.index');
-Route::resource('categories', CategoriesController::class);
+
 
 
