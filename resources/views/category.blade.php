@@ -193,7 +193,7 @@
             newCategoryItem.classList.add('py-2');
             newCategoryItem.setAttribute('data-id', category.id);
             newCategoryItem.innerHTML = `
-                <div class="flex items-center">
+                <div class="flex justify-between p-2 hover:bg-slate-100 hover:rounded-lg ">
                     ${category.children && category.children.length > 0 ? `
                             <button onclick="toggleChildren('${category.id}')" class="mr-2">
                                 <svg id="arrow-${category.id}" xmlns="http://www.w3.org/2000/svg" fill="none"
