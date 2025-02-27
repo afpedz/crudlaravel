@@ -1,10 +1,10 @@
 @if (!$category->children->isNotEmpty())
-<li class="py-2 ml-8">
+<li class="ml-8">
 @endif
 @if ($category->children->isNotEmpty())
-<li class="py-2">
+<li>
 @endif
-    <div class="flex justify-between p-2 hover:bg-slate-100 hover:rounded-lg ">
+    <div class="flex justify-between p-2 mt-2 hover:bg-slate-100 hover:rounded-lg ">
         @if ($category->children->isNotEmpty())
             <button onclick="toggleChildren('{{ $category->id }}')" class="mr-2">
                 <svg id="arrow-{{ $category->id }}" xmlns="http://www.w3.org/2000/svg" fill="none"

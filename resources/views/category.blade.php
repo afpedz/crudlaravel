@@ -189,11 +189,9 @@
              if(!category.children.length > 0){
                  newCategoryItem.classList.add('ml-8');
              }
-
-            newCategoryItem.classList.add('py-2');
             newCategoryItem.setAttribute('data-id', category.id);
             newCategoryItem.innerHTML = `
-                <div class="flex justify-between p-2 hover:bg-slate-100 hover:rounded-lg ">
+                <div class="flex justify-between p-2 mt-2 hover:bg-slate-100 hover:rounded-lg ">
                     ${category.children && category.children.length > 0 ? `
                             <button onclick="toggleChildren('${category.id}')" class="mr-2">
                                 <svg id="arrow-${category.id}" xmlns="http://www.w3.org/2000/svg" fill="none"
