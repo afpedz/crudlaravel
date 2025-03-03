@@ -22,46 +22,49 @@ class ProductsController extends Controller
         $request->validate([
             'product_code' => 'required|string|max:255|unique:products,product_code',
             'description' => 'required|string',
-            'category_id' => 'required|exists:categories,id', // Validate category_id
+            'category_id' => 'required|exists:categories,id',
             'price' => 'required|numeric|regex:/^\d+(\.\d{2})?$/',
-            'unit_id' => 'required|exists:units,id', // Validate unit_id
+            'unit_id' => 'required|exists:units,id',
         ]);
-
-        // Use category_id and unit_id instead of category and unit
+    
         $product = Products::create($request->only('product_code', 'description', 'category_id', 'price', 'unit_id'));
-
-        return redirect()->route('products.index');
+    
+        // Load the category and unit relationships
+        $product->load('category', 'unit');
+    
+        return response()->json(['success' => true, 'product' => $product]);
     }
-
+    
     public function update(Request $request, $id)
     {
         $request->validate([
             'product_code' => 'required|string|max:255|unique:products,product_code,' . $id,
             'description' => 'required|string',
-            'category_id' => 'required|exists:categories,id', // Validate category_id
+            'category_id' => 'required|exists:categories,id',
             'price' => 'required|numeric|regex:/^\d+(\.\d{2})?$/',
-            'unit_id' => 'required|exists:units,id', // Validate unit_id
+            'unit_id' => 'required|exists:units,id',
         ]);
-
+    
         $product = Products::findOrFail($id);
-        
-        // Use category_id and unit_id instead of category and unit
         $product->update($request->only('product_code', 'description', 'category_id', 'price', 'unit_id'));
-
-        return redirect()->route('products.index');
+    
+        // Load the category and unit relationships
+        $product->load('category', 'unit');
+    
+        return response()->json(['success' => true, 'product' => $product]);
     }
-
+        
     public function destroy($id)
     {
         $product = Products::findOrFail($id);
         $product->delete();
-
-        return redirect()->route('products.index');
+    
+        return response()->json(['success' => true, 'productId' => $id]);
     }
+    
     public function edit($id)
     {
         $product = Products::findOrFail($id);
         return response()->json(['product' => $product]);
     }
-
 }
