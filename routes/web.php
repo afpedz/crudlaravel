@@ -44,7 +44,9 @@ Route::middleware('auth')->group(function () {
     Route::resource('categories', CategoriesController::class);
     Route::get('/products',[ProductsController::class,'index'])->name('products.index');
     Route::resource('products', ProductsController::class);
+    Route::put('/products/{product}', [ProductsController::class, 'update'])->name('products.update');
 });
+
 
 
 

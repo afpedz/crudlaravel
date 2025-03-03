@@ -258,8 +258,8 @@
                     categoryMap[parentId].forEach(category => {
                         const option = document.createElement('option');
                         option.value = category.id;
-                        // Use non-breaking spaces for indentation
-                        option.textContent = '\u00A0'.repeat(depth * 4) + category.name; 
+                        // Use non-breaking spaces for indentation, edit the number to change the indentation level
+                        option.textContent = '\u00A0'.repeat(depth * 3) + category.name;  // edit the number next to depth to change indetn
                         parentCategorySelect.appendChild(option);
                         addOptions(category.id, depth + 1);
                     });

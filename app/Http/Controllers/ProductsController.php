@@ -2,6 +2,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Products;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Http\Request;
 use App\Models\Categories;
 use App\Models\Unit;
@@ -57,4 +58,10 @@ class ProductsController extends Controller
 
         return redirect()->route('products.index');
     }
+    public function edit($id)
+    {
+        $product = Products::findOrFail($id);
+        return response()->json(['product' => $product]);
+    }
+
 }

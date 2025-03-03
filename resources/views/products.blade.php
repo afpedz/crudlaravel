@@ -59,7 +59,7 @@
                             <td class="border border-gray-300 px-5 py-2">{{ $product->unit->name }}</td>
                             <td class="border border-gray-300 px-5 py-2">
                                 <div class="flex justify-center gap-2">
-                                    <button onclick="openModal('{{ $product->id }}')"
+                                    <button onclick="openEditProductModal('{{ $product->id }}')"
                                         class="text-gray-800 hover:underline"><svg xmlns="http://www.w3.org/2000/svg"
                                             fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
                                             class="size-6">
@@ -84,7 +84,6 @@
         @endif
     </div>
 
-    {{-- Product Modal --}}
     <div id="addProductModal"
         class="fixed inset-0 bg-gray-500 bg-opacity-75 flex justify-center items-center z-50 hidden">
         <div class="bg-white p-8 rounded-lg w-1/4">
@@ -138,6 +137,76 @@
         </div>
     </div>
 
+    <div id="editProductModal"
+        class="fixed inset-0 bg-gray-500 bg-opacity-75 flex justify-center items-center z-50 hidden">
+        <div class="bg-white p-8 rounded-lg w-1/4">
+            <h2 class="text-2xl font-bold text-center mb-4">Edit Product</h2>
+            <form id="editProductForm" action=" " method="POST">
+            @csrf
+            @method('PUT')
+                <input type="hidden" name="product_id" id="editProductId" />
+                <div class="mb-4">
+                    <label for="editProductCode" class="block text-sm font-medium text-gray-700">Product Code</label>
+                    <input type="text" name="product_code" id="editProductCode"
+                        class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md" required />
+                </div>
+                <div class="mb-4">
+                    <label for="editProductDescription" class="block text-sm font-medium text-gray-700">Description</label>
+                    <textarea name="description" id="editProductDescription"
+                        class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md resize-none" rows="2" required></textarea>
+                </div>
+                <div class="mb-4">
+                    <label for="editProductCategory" class="block text-sm font-medium text-gray-700">Category</label>
+                    <select name="category_id" id="editProductCategory"
+                        class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md" required>
+                        <option value="">Select a Category</option>
+                        @php renderCategories($categories) @endphp
+                    </select>
+                </div>
+                <div class="mb-4">
+                    <label for="editProductPrice" class="block text-sm font-medium text-gray-700">Price</label>
+                    <input type="number" step="0.01" name="price" id="editProductPrice"
+                        class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md" required />
+                </div>
+                <div class="mb-4">
+                    <label for="editProductUnit" class="block text-sm font-medium text-gray-700">Unit</label>
+                    <select name="unit_id" id="editProductUnit"
+                        class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md" required>
+                        <option value="">Select a Unit</option>
+                        @foreach ($units as $unit)
+                            <option value="{{ $unit->id }}">{{ $unit->name }}</option>
+                        @endforeach
+                    </select>
+                </div>
+                <div class="flex justify-between gap-4">
+                    <button type="button" onclick="closeEditProductModal()"
+                        class="px-4 py-2 bg-gray-600 text-white rounded-md hover:bg-gray-700 w-full">Cancel</button>
+                    <button type="submit"
+                        class="px-4 py-2 bg-gray-800 text-white rounded-md hover:bg-gray-900 w-full">Save
+                        Changes</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div id="confirmDeleteModal"
+        class="fixed inset-0 bg-gray-500 bg-opacity-75 flex justify-center items-center z-50 hidden">
+        <div class="bg-white p-8 rounded-lg w-1/4">
+            <h2 id="confirmDeleteMessage" class="text-xl font-semibold text-center mb-4">Are you sure you want to delete this product?</h2>
+            <div class="flex justify-between gap-4">
+                <button onclick="closeConfirmDelete()"
+                    class="px-4 py-2 bg-gray-800 text-white rounded-md hover:bg-gray-900 w-full">Cancel</button>
+                <form id="deleteForm" action="" method="POST" class="inline-block w-full">
+                    @csrf
+                    @method('DELETE')
+                    <button type="submit"
+                        class="px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600 w-full">Confirm</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+
     <script>
         function showAddProductModal() {
             document.getElementById('addProductModal').classList.remove('hidden');
@@ -145,6 +214,15 @@
 
         function closeAddProductModal() {
             document.getElementById('addProductModal').classList.add('hidden');
+        }
+        function openConfirmDelete(productId) {
+            document.getElementById('confirmDeleteMessage').textContent = "Are you sure you want to delete this product?";
+            document.getElementById('confirmDeleteModal').classList.remove('hidden');
+            document.getElementById('deleteForm').action = '/products/' + productId; // Set the action for the delete form
+        }
+
+        function closeConfirmDelete() {
+            document.getElementById('confirmDeleteModal').classList.add('hidden');
         }
 
         document.getElementById("productCategory").addEventListener("change", function() {
@@ -155,6 +233,33 @@
             }
             selectedOption.textContent = selectedOption.getAttribute("data-original-text").trim();
         });
+        function openEditProductModal(productId) {
+            fetch(`/products/${productId}/edit`)
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('editProductId').value = data.product.id;
+                    document.getElementById('editProductCode').value = data.product.product_code;
+                    document.getElementById('editProductDescription').value = data.product.description;
+                    document.getElementById('editProductPrice').value = data.product.price;
+                    
+                    const categorySelect = document.getElementById('editProductCategory');
+                    categorySelect.value = data.product.category_id;
+
+                    const unitSelect = document.getElementById('editProductUnit');
+                    unitSelect.value = data.product.unit_id;
+
+                    document.getElementById('editProductForm').action = `/products/${data.product.id}`;
+
+                    document.getElementById('editProductModal').classList.remove('hidden');
+                })
+                .catch(error => {
+                    console.error('Error fetching product data:', error);
+                });
+        }
+
+        function closeEditProductModal() {
+            document.getElementById('editProductModal').classList.add('hidden');
+        }
 
         document.getElementById("productCategory").addEventListener("mousedown", function() {
             let select = this;
