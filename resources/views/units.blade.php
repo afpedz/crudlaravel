@@ -136,12 +136,15 @@
             document.getElementById('addUnit').classList.add('hidden');
         }
 
-        function showEditModal(id, name) {
+        function showEditModal(id) {
+            const unitRow = document.querySelector(`tr[data-id='${id}']`);
+            const unitName = unitRow.children[1].textContent;
             document.getElementById('editUnitId').value = id;
-            document.getElementById('editUnitName').value = name;
+            document.getElementById('editUnitName').value = unitName;
             document.getElementById('editUnitForm').action = `/units/${id}`;
             document.getElementById('editUnit').classList.remove('hidden');
         }
+
 
         function closeEditModal() {
             document.getElementById('editUnit').classList.add('hidden');
