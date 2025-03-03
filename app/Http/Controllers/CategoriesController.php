@@ -9,15 +9,15 @@ class CategoriesController extends Controller
 {
     public function index()
     {
-        $categories = Categories::all();
-        
-        // Fetch categories with children and sort them
+        // Fetch categories and sort them alphabetically
+        $categories = Categories::orderBy('name')->get();
         $categoryTree = Categories::with(['children' => function($query) {
-            $query->orderBy('name'); // Sort children alphabetically
+            $query->orderBy('name');
         }])->whereNull('parent_id')->orderBy('name')->paginate(50);
         
         return view('category', compact('categories', 'categoryTree'));
     }
+    
     public function store(Request $request)
     {
         $request->validate([

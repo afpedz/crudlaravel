@@ -47,7 +47,7 @@
                         class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md">
                         <option value="" selected>No Parent (Main Category)</option>
                         @foreach ($categories as $category)
-                            <option value="{{ $category->id }}">{{ $category->name }}</option>
+                            @include('category-option', ['category' => $category, 'depth' => 0])
                         @endforeach
                     </select>
                 </div>
@@ -61,6 +61,7 @@
             </form>
         </div>
     </div>
+
 
     <div id="confirmDeleteModal"
         class="fixed inset-0 bg-gray-500 bg-opacity-75 flex justify-center items-center z-50 hidden">
@@ -234,23 +235,39 @@
 
             return newCategoryItem;
         }
-        //refreshes the dropdown whenever the table is modified
         function updateCategoryDropdown(categories) {
             const parentCategorySelect = document.getElementById('parentCategory');
             parentCategorySelect.innerHTML =
-            '<option value="" selected>No Parent (Main Category)</option>'; // Reset options
+                '<option value="" selected>No Parent (Main Category)</option>'; // Reset options
 
             // Sort categories alphabetically
             categories.sort((a, b) => a.name.localeCompare(b.name));
 
+            // Create a map to hold categories by their parent_id
+            const categoryMap = {};
             categories.forEach(category => {
-                const option = document.createElement('option');
-                option.value = category.id;
-                option.textContent = category.name;
-                parentCategorySelect.appendChild(option);
+                if (!categoryMap[category.parent_id]) {
+                    categoryMap[category.parent_id] = [];
+                }
+                categoryMap[category.parent_id].push(category);
             });
-        }
 
+            // Recursive function to add options with indentation
+            function addOptions(parentId = null, depth = 0) {
+                if (categoryMap[parentId]) {
+                    categoryMap[parentId].forEach(category => {
+                        const option = document.createElement('option');
+                        option.value = category.id;
+                        // Use non-breaking spaces for indentation
+                        option.textContent = '\u00A0'.repeat(depth * 4) + category.name; 
+                        parentCategorySelect.appendChild(option);
+                        addOptions(category.id, depth + 1);
+                    });
+                }
+            }
+            addOptions();
+        }
+        
         // For adding categories AJAX
         document.addEventListener('DOMContentLoaded', function() {
             document.getElementById('addCategoryForm').addEventListener('submit', function(e) {
@@ -361,6 +378,10 @@
                         console.error('There was a problem with the fetch operation:', error);
                     });
             });
+        });
+        //use for initial loading indentation of drop down list
+        document.addEventListener('DOMContentLoaded', function() {
+            updateCategoryDropdown(@json($categories));//idk why error but it works
         });
     </script>
 
