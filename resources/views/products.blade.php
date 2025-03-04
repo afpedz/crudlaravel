@@ -54,9 +54,9 @@
                             <td class="border border-gray-300 px-5 py-2 text-center">{{ $product->id }}</td>
                             <td class="border border-gray-300 px-5 py-2">{{ $product->product_code }}</td>
                             <td class="border border-gray-300 px-5 py-2">{{ $product->description }}</td>
-                            <td class="border border-gray-300 px-5 py-2">{{ $product->category->name }}</td>
+                            <td class="border border-gray-300 px-5 py-2">{{ $product->category->name ?? "N/A"}}</td>
                             <td class="border border-gray-300 px-5 py-2">{{ $product->price }}</td>
-                            <td class="border border-gray-300 px-5 py-2">{{ $product->unit->name }}</td>
+                            <td class="border border-gray-300 px-5 py-2">{{ $product->unit->name ?? "N/A"}}</td>
                             <td class="border border-gray-300 px-5 py-2">
                                 <div class="flex justify-center gap-2">
                                     <button onclick="openEditProductModal('{{ $product->id }}')"
@@ -258,7 +258,7 @@
     function openConfirmDelete(productId) {
         document.getElementById('confirmDeleteMessage').textContent = "Are you sure you want to delete this product?";
         document.getElementById('confirmDeleteModal').classList.remove('hidden');
-        document.getElementById('deleteForm').action = '/products/' + productId; // Set the action for the delete form
+        document.getElementById('deleteForm').action = '/products/' + productId;
     }
 
     function closeConfirmDelete() {
@@ -280,9 +280,9 @@
                 <td class="border border-gray-300 px-5 py-2 text-center">${product.id}</td>
                 <td class="border border-gray-300 px-5 py-2">${product.product_code}</td>
                 <td class="border border-gray-300 px-5 py-2">${product.description}</td>
-                <td class="border border-gray-300 px-5 py-2">${product.category.name}</td>
+                <td class="border border-gray-300 px-5 py-2">${product.category?.name ?? "N/A"}</td>
                 <td class="border border-gray-300 px-5 py-2">${product.price}</td>
-                <td class="border border-gray-300 px-5 py-2">${product.unit.name}</td>
+                <td class="border border-gray-300 px-5 py-2">${product.unit?.name ?? "N/A"} </td>
                 <td class="border border-gray-300 px-5 py-2">
                                 <div class="flex justify-center gap-2">
                                     <button onclick="openEditProductModal('{{ $product->id }}')"
